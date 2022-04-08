@@ -1,0 +1,159 @@
+{
+	"info": {
+		"_postman_id": "aac60964-1574-4f29-88cd-4506304b4283",
+		"name": "Lesson5 Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"pm.environment.set(\"token\", jsonData.token);\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://qwallity.herokuapp.com/login/api",
+					"protocol": "https",
+					"host": [
+						"qwallity",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"login",
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add_course",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.variables.replaceIn('{{$randomNoun}}')\r",
+							"\r",
+							"var jsonData = JSON.parse(responseBody);\r",
+							"pm.environment.set(\"title\", jsonData.title);\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"{{$randomNoun}}\",\r\n  \"body\": \"goiyhluij\",\r\n  \"coursetype\": \"1\",\r\n  \"author\": \"lbhlhglukhnl\",\r\n  \"price\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://qwallity.herokuapp.com/add_course/api",
+					"protocol": "https",
+					"host": [
+						"qwallity",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"add_course",
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Advanced course",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"check title existing in responce\", function () {\r",
+							"     let var1 =pm.variables.get(\"title\");\r",
+							"    pm.expect(pm.response.text()).to.include(var1);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://qwallity.herokuapp.com/courses/advanced/api",
+					"protocol": "https",
+					"host": [
+						"qwallity",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"courses",
+						"advanced",
+						"api"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

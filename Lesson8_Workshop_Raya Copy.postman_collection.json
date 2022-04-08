@@ -1,0 +1,337 @@
+{
+	"info": {
+		"_postman_id": "f3148285-fef9-45e8-9482-b22d9e3b7724",
+		"name": "Workshop_Raya Copy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login non_admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"    pm.environment.set(\"token\", jsonData.token);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"     pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://qwallity.herokuapp.com/login/api",
+					"protocol": "https",
+					"host": [
+						"qwallity",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"login",
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add_course",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData1 = JSON.parse(responseBody);\r",
+							"{\r",
+							"    pm.environment.set(\"course_ID\", jsonData1.id);\r",
+							"    pm.environment.set(\"course_price\", Number(jsonData1.price));\r",
+							"} \r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"{{$randomFirstName}}\",\r\n  \"body\": \"team7\",\r\n  \"coursetype\": \"1\",\r\n  \"author\": \"team7\",\r\n  \"price\": {{$randomPrice}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://qwallity.herokuapp.com/add_course/api",
+					"protocol": "https",
+					"host": [
+						"qwallity",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"add_course",
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check balance",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData2 = JSON.parse(responseBody);\r",
+							"    pm.environment.set(\"bal\", Number(jsonData2.balance));\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://qwallity.herokuapp.com/balance/api/{{username}}",
+					"protocol": "https",
+					"host": [
+						"qwallity",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"balance",
+						"api",
+						"{{username}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buy course",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.text()=='Account Balance is insufficient')\r",
+							"{\r",
+							"    console.log('--Add amount--');\r",
+							"    postman.setNextRequest('Add amount');\r",
+							"} \r",
+							"else\r",
+							"{\r",
+							"    console.log('--Check balance--');\r",
+							"    postman.setNextRequest('check new balance')\r",
+							"}\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://qwallity.herokuapp.com/buy_course/api/{{course_ID}}/{{username}}",
+					"protocol": "https",
+					"host": [
+						"qwallity",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"buy_course",
+						"api",
+						"{{course_ID}}",
+						"{{username}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check new balance",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData3 = JSON.parse(responseBody);\r",
+							"    pm.environment.set(\"newbal\", Number(jsonData3.balance));\r",
+							"\r",
+							"if (pm.environment.get(\"newbal\")==pm.environment.get(\"bal\")-pm.environment.get(\"course_price\"))\r",
+							"{\r",
+							"    console.log('newbal=bal-course_price');\r",
+							"} \r",
+							"postman.setNextRequest('Clear');\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://qwallity.herokuapp.com/balance/api/{{username}}",
+					"protocol": "https",
+					"host": [
+						"qwallity",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"balance",
+						"api",
+						"{{username}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add amount",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"amount\",pm.environment.get(\"course_price\")-pm.environment.get(\"bal\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"amount\": {{amount}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://qwallity.herokuapp.com/add_account_balance/{{username}}/api",
+					"protocol": "https",
+					"host": [
+						"qwallity",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"add_account_balance",
+						"{{username}}",
+						"api"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
